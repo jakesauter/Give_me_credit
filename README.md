@@ -1,1 +1,3 @@
-README
+# Give Me Credit
+
+[Give me credit!](git remote add origin git@github.com:jakesauter/Give_me_credit.git) was a previous Kaggle competition from 2011 with some great data to learn about credit trustworthiness! It has features such as **RUUL** (Revolving Utilization of Unsecured Lines) ...
