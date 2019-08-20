@@ -1,13 +1,13 @@
 
 
-load_training_data <- function() {
+load_filtered_training_data <- function() {
   df <- read.csv('../data/cs-training.csv') %>% 
     filter(DebtRatio < 3400) 
   df[,1] <- NULL
   df[1:(nrow(df) /2), ] %>% as_tibble
 }
 
-load_validation_data <- function() {
+load_filtered_validation_data <- function() {
   df <- read.csv('../data/cs-training.csv') %>% 
     filter(DebtRatio < 3400) 
   df[,1] <- NULL
