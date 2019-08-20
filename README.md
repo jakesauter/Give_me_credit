@@ -15,3 +15,4 @@
 * **age**
 
 
+[http://htmlpreview.github.io/?https://github.com/jakesauter/Give_me_credit/blob/master/give_me_credit.Rmd](Please click this link)
