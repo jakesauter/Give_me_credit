@@ -15,4 +15,4 @@
 * **age**
 
 
-[Please click this link](http://htmlpreview.github.io/?https://github.com/jakesauter/Give_me_credit/blob/master/give_me_credit.nb.html)
+[Link to Rmarkdown Notebook](http://htmlpreview.github.io/?https://github.com/jakesauter/Give_me_credit/blob/master/give_me_credit.nb.html)
