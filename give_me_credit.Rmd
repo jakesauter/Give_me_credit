@@ -3,6 +3,7 @@ title: "Give Me Credit -- Notebook"
 output: 
   github_document:
     toc: true
+    df_print: kable
 ---
 
 # Phase 1: Data Exploration / Correction 
@@ -18,11 +19,11 @@ will assist us in it useful maping function for iteration.
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
-```{r}
+```{r includes, message=FALSE, warning=FALSE}
 library(dplyr)
 library(purrr)
 library(ggplot2)
-suppressWarnings(library(cowplot))
+library(cowplot)
 ```
 
 ```{r}
@@ -35,7 +36,10 @@ to work with and their types.
 
 ```{r}
 df <- load_all_training_data()
-df %>% map(~typeof(.x))
+
+names(df) %>% 
+  map(~tibble(Var = .x, Type = typeof(df[[.x]][1]))) %>% 
+  bind_rows
 ```
 
 I always think it is a good idea to see a few samples
@@ -170,7 +174,9 @@ Now lets take a look at the number of 90 days late variable
 df %>%
   select(NumberOfTimes90DaysLate) %>% 
   unlist %>% 
-  table 
+  table %>%
+  as.data.frame %>% 
+  set_names(c('Value', 'Frequency'))
 ```
 
 It is interesting that no one is between 17 and 96 times late. Lets take 
@@ -280,7 +286,11 @@ x %>% count
 ```
 
 ```{r}
-x %>% summary
+x %>% 
+  summary %>% 
+  as.list %>% 
+  as.data.frame %>% 
+  t()
 ```
 
 There are only 23 records in this region, but they are defaulting

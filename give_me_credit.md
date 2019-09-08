@@ -23,20 +23,8 @@ We will need **dplyr** in order to make sense of our data as well as make possib
 library(dplyr)
 library(purrr)
 library(ggplot2)
-suppressWarnings(library(cowplot))
+library(cowplot)
 ```
-
-    ## 
-    ## ********************************************************
-
-    ## Note: As of version 1.0.0, cowplot does not change the
-
-    ##   default ggplot2 theme anymore. To recover the previous
-
-    ##   behavior, execute:
-    ##   theme_set(theme_cowplot())
-
-    ## ********************************************************
 
 ``` r
 source("R/utils.R")
@@ -46,41 +34,25 @@ Now lets load in the data and begin exploring! The first thing we will do is tak
 
 ``` r
 df <- load_all_training_data()
-df %>% map(~typeof(.x))
+
+names(df) %>% 
+  map(~tibble(Var = .x, Type = typeof(df[[.x]][1]))) %>% 
+  bind_rows
 ```
 
-    ## $SeriousDlqin2yrs
-    ## [1] "integer"
-    ## 
-    ## $RevolvingUtilizationOfUnsecuredLines
-    ## [1] "double"
-    ## 
-    ## $age
-    ## [1] "integer"
-    ## 
-    ## $NumberOfTime30.59DaysPastDueNotWorse
-    ## [1] "integer"
-    ## 
-    ## $DebtRatio
-    ## [1] "double"
-    ## 
-    ## $MonthlyIncome
-    ## [1] "integer"
-    ## 
-    ## $NumberOfOpenCreditLinesAndLoans
-    ## [1] "integer"
-    ## 
-    ## $NumberOfTimes90DaysLate
-    ## [1] "integer"
-    ## 
-    ## $NumberRealEstateLoansOrLines
-    ## [1] "integer"
-    ## 
-    ## $NumberOfTime60.89DaysPastDueNotWorse
-    ## [1] "integer"
-    ## 
-    ## $NumberOfDependents
-    ## [1] "integer"
+| Var                                  | Type    |
+|:-------------------------------------|:--------|
+| SeriousDlqin2yrs                     | integer |
+| RevolvingUtilizationOfUnsecuredLines | double  |
+| age                                  | integer |
+| NumberOfTime30.59DaysPastDueNotWorse | integer |
+| DebtRatio                            | double  |
+| MonthlyIncome                        | integer |
+| NumberOfOpenCreditLinesAndLoans      | integer |
+| NumberOfTimes90DaysLate              | integer |
+| NumberRealEstateLoansOrLines         | integer |
+| NumberOfTime60.89DaysPastDueNotWorse | integer |
+| NumberOfDependents                   | integer |
 
 I always think it is a good idea to see a few samples of they data you are working with as well, so here are the first 5 rows.
 
@@ -88,36 +60,13 @@ I always think it is a good idea to see a few samples of they data you are worki
 df %>% head(n = 5L)
 ```
 
-    ##   SeriousDlqin2yrs RevolvingUtilizationOfUnsecuredLines age
-    ## 1                1                            0.7661266  45
-    ## 2                0                            0.9571510  40
-    ## 3                0                            0.6581801  38
-    ## 4                0                            0.2338098  30
-    ## 5                0                            0.9072394  49
-    ##   NumberOfTime30.59DaysPastDueNotWorse  DebtRatio MonthlyIncome
-    ## 1                                    2 0.80298213          9120
-    ## 2                                    0 0.12187620          2600
-    ## 3                                    1 0.08511338          3042
-    ## 4                                    0 0.03604968          3300
-    ## 5                                    1 0.02492570         63588
-    ##   NumberOfOpenCreditLinesAndLoans NumberOfTimes90DaysLate
-    ## 1                              13                       0
-    ## 2                               4                       0
-    ## 3                               2                       1
-    ## 4                               5                       0
-    ## 5                               7                       0
-    ##   NumberRealEstateLoansOrLines NumberOfTime60.89DaysPastDueNotWorse
-    ## 1                            6                                    0
-    ## 2                            0                                    0
-    ## 3                            0                                    0
-    ## 4                            0                                    0
-    ## 5                            1                                    0
-    ##   NumberOfDependents
-    ## 1                  2
-    ## 2                  1
-    ## 3                  0
-    ## 4                  0
-    ## 5                  0
+|  SeriousDlqin2yrs|  RevolvingUtilizationOfUnsecuredLines|  age|  NumberOfTime30.59DaysPastDueNotWorse|  DebtRatio|  MonthlyIncome|  NumberOfOpenCreditLinesAndLoans|  NumberOfTimes90DaysLate|  NumberRealEstateLoansOrLines|  NumberOfTime60.89DaysPastDueNotWorse|  NumberOfDependents|
+|-----------------:|-------------------------------------:|----:|-------------------------------------:|----------:|--------------:|--------------------------------:|------------------------:|-----------------------------:|-------------------------------------:|-------------------:|
+|                 1|                             0.7661266|   45|                                     2|  0.8029821|           9120|                               13|                        0|                             6|                                     0|                   2|
+|                 0|                             0.9571510|   40|                                     0|  0.1218762|           2600|                                4|                        0|                             0|                                     0|                   1|
+|                 0|                             0.6581801|   38|                                     1|  0.0851134|           3042|                                2|                        1|                             0|                                     0|                   0|
+|                 0|                             0.2338098|   30|                                     0|  0.0360497|           3300|                                5|                        0|                             0|                                     0|                   0|
+|                 0|                             0.9072394|   49|                                     1|  0.0249257|          63588|                                7|                        0|                             1|                                     0|                   0|
 
 Lets take a look at how balanced the labels that we are trying to predict are in the dataset we are given.
 
@@ -140,7 +89,7 @@ ggplot(df) +
   facet_wrap(~SeriousDlqin2yrs)
 ```
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 Debt Ratio
 ----------
@@ -230,8 +179,9 @@ df %>%
   summarise(mean = mean(SeriousDlqin2yrs)) 
 ```
 
-    ##         mean
-    ## 1 0.07027027
+|       mean|
+|----------:|
+|  0.0702703|
 
 I couldn't quite understand why/how this subset of candiates owe 3500 times more than they are generating and do not have a higher than usual default rate. A hypothesis I have include that they have possilby filed for bankruptcy and are making the payments that they can afford
 
@@ -251,14 +201,32 @@ Now lets take a look at the number of 90 days late variable
 df %>%
   select(NumberOfTimes90DaysLate) %>% 
   unlist %>% 
-  table 
+  table %>%
+  as.data.frame %>% 
+  set_names(c('Value', 'Frequency'))
 ```
 
-    ## .
-    ##      0      1      2      3      4      5      6      7      8      9 
-    ## 141662   5243   1555    667    291    131     80     38     21     19 
-    ##     10     11     12     13     14     15     17     96     98 
-    ##      8      5      2      4      2      2      1      5    264
+| Value |  Frequency|
+|:------|----------:|
+| 0     |     141662|
+| 1     |       5243|
+| 2     |       1555|
+| 3     |        667|
+| 4     |        291|
+| 5     |        131|
+| 6     |         80|
+| 7     |         38|
+| 8     |         21|
+| 9     |         19|
+| 10    |          8|
+| 11    |          5|
+| 12    |          2|
+| 13    |          4|
+| 14    |          2|
+| 15    |          2|
+| 17    |          1|
+| 96    |          5|
+| 98    |        264|
 
 It is interesting that no one is between 17 and 96 times late. Lets take a lot at these records
 
@@ -368,10 +336,9 @@ x %>%
   count 
 ```
 
-    ## # A tibble: 1 x 1
-    ##       n
-    ##   <int>
-    ## 1 19805
+|      n|
+|------:|
+|  19805|
 
 ``` r
 x %>% summary
@@ -401,22 +368,31 @@ x <- df %>%
 x %>% count
 ```
 
-    ## # A tibble: 1 x 1
-    ##       n
-    ##   <int>
-    ## 1    23
+|    n|
+|----:|
+|   23|
 
 ``` r
-x %>% summary
+x %>% 
+  summary %>% 
+  as.list %>% 
+  as.data.frame %>% 
+  t()
 ```
 
-    ##  RevolvingUtilizationOfUnsecuredLines SeriousDlqin2yrs
-    ##  Min.   :4.075                        Min.   :0.0000  
-    ##  1st Qu.:4.416                        1st Qu.:0.0000  
-    ##  Median :5.214                        Median :0.0000  
-    ##  Mean   :5.420                        Mean   :0.2609  
-    ##  3rd Qu.:5.689                        3rd Qu.:0.5000  
-    ##  Max.   :8.852                        Max.   :1.0000
+    ##                     [,1]              
+    ## X.Min.....4.075...  "Min.   :4.075  " 
+    ## X.1st.Qu..4.416...  "1st Qu.:4.416  " 
+    ## X.Median..5.214...  "Median :5.214  " 
+    ## X.Mean....5.420...  "Mean   :5.420  " 
+    ## X.3rd.Qu..5.689...  "3rd Qu.:5.689  " 
+    ## X.Max.....8.852...  "Max.   :8.852  " 
+    ## X.Min.....0.0000... "Min.   :0.0000  "
+    ## X.1st.Qu..0.0000... "1st Qu.:0.0000  "
+    ## X.Median..0.0000... "Median :0.0000  "
+    ## X.Mean....0.2609... "Mean   :0.2609  "
+    ## X.3rd.Qu..0.5000... "3rd Qu.:0.5000  "
+    ## X.Max.....1.0000... "Max.   :1.0000  "
 
 There are only 23 records in this region, but they are defaulting at a very high rate, with this in mind lets take a look at records with an even higher RUUL
 
@@ -431,10 +407,9 @@ x <- df %>%
 x %>% count
 ```
 
-    ## # A tibble: 1 x 1
-    ##       n
-    ##   <int>
-    ## 1   241
+|    n|
+|----:|
+|  241|
 
 ``` r
 x %>% summary
@@ -479,7 +454,7 @@ model$residuals %>%
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-32-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 ``` r
 model$coefficients
@@ -563,7 +538,7 @@ x %>%
   geom_histogram(aes(x = .), bins = 100)
 ```
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-36-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 30k entries did not have a monthly income so thats why so many people have the median value that we calculated
 
@@ -627,13 +602,13 @@ preds <- raw_preds[,2] %>% unname
 confusion_matrix(test$SeriousDlqin2yrs, preds, clf_thresh = .5)
 ```
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-39-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-38-1.png)
 
 ``` r
 roc <- simple_roc(test$SeriousDlqin2yrs, preds)
 ```
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-40-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-39-1.png)
 
 ``` r
 clf_thresh <- roc %>% select_threshold(FPR = .25)
@@ -646,7 +621,7 @@ clf_thresh <- roc %>% select_threshold(FPR = .25)
 confusion_matrix(test, preds, clf_thresh = clf_thresh)
 ```
 
-![](give_me_credit_files/figure-markdown_github/unnamed-chunk-41-1.png)
+![](give_me_credit_files/figure-markdown_github/unnamed-chunk-40-1.png)
 
 SVM
 ---
