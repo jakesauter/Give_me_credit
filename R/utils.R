@@ -80,48 +80,50 @@ confusion_matrix <- function(test, preds, clf_thresh) {
     preds[preds < clf_thresh] = 0
   }
   
-  ntrue <- length(which(test$SeriousDlqin2yrs == 1))
-  nfalse <- length(which(test$SeriousDlqin2yrs == 0))
+  ntrue <- length(which(test == 1))
+  nfalse <- length(which(test == 0))
   
-  tp <- length(which(preds == 1 & test$SeriousDlqin2yrs == 1))
-  fn <- length(which(preds == 0 & test$SeriousDlqin2yrs == 1))
+  tp <- length(which(preds == 1 & test == 1))
+  fn <- length(which(preds == 0 & test == 1))
   
-  tn <- length(which(preds == 0 & test$SeriousDlqin2yrs == 0))
-  fp <- length(which(preds == 1 & test$SeriousDlqin2yrs == 0))
+  tn <- length(which(preds == 0 & test == 0))
+  fp <- length(which(preds == 1 & test == 0))
   
   
   results <- data.frame(true = c(tp, fn), false = c(fp, tn), row.names = c('pred_true', 'pred_false'))
   
-  cat('\nnumber of predictions confusion matrix: \n')
-  # results %>% print
-  plot_confusion(tp = tp, fp = fp, 
-                 tn = tn, fn = fn)
+  p1 <-
+    plot_confusion(tp = tp, fp = fp, 
+                 tn = tn, fn = fn) + 
+    ggtitle('Total Counts') + 
+    theme(title = element_text(face = 'bold', size = 12), 
+          axis.title = element_text(face = 'plain', size = 12), 
+          legend.title = element_text(face = 'plain'))
   
-  cat('\n')
-  
-  cat('proprtional to population confustion matrix: \n')
-  (results / sum(results)) %>% 
+  p2 <-
+    (results / sum(results)) %>% 
     round(3) %>% unlist %>% 
-    plot_confusion(prop = TRUE)
-  
-  cat('\n')
+    plot_confusion(prop = TRUE) + 
+    ggtitle('Proportional to Total') + 
+    theme(title = element_text(face = 'bold', size = 12), 
+          axis.title = element_text(face = 'plain', size = 12), 
+          legend.title = element_text(face = 'plain'))
   
   results[,1] <- results[,1] / sum(results[,1])
   results[,2] <- results[,2] / sum(results[,2])
   
-  cat('proportional to category confustion matrix: \n')
-  results %>% round(3) %>% unlist %>% 
-    plot_confusion(prop = TRUE)
+  p3 <-
+    results %>% round(3) %>% unlist %>% 
+    plot_confusion(prop = TRUE) + 
+    ggtitle('Proportional to Class') + 
+    theme(title = element_text(face = 'bold', size = 12), 
+          axis.title = element_text(face = 'plain', size = 12), 
+          legend.title = element_text(face = 'plain'))
   
-  cat('\n')
-  
-  tpr = tp / (tp + fn)
-  tnr = tn / (tn + fp)
-  
-  cat('true positive rate: ', tpr, '\n')
-  cat('true negative rate: ', tnr, '\n')
-  
-  cat('\n')
+  plt_grid <-
+    plot_grid(p1, p2, p3)
+
+  plt_grid
 }
 
 plot_confusion <- function(fp = 0, 
@@ -130,32 +132,39 @@ plot_confusion <- function(fp = 0,
                            fn = 0, 
                            prop = FALSE) {
   
-  if (length(fp > 1)) {
+  if (length(fp) > 1) {
     tn <- fp[2]
     tp <- fp[3]
     fn <- fp[4]
     fp <- fp[1]
   }
   
-  Y <- c(fp, tn, tp, fn)
-  TClass <- factor(c(0,0,1,1))
-  PClass <- factor(c(1,0,1,0))
-  df <- data.frame(TClass, PClass, Y)
+  Y <- c(tn,fp,fn,tp)
   
-  plot <- 
-    ggplot(data =  df, mapping = aes(x = TClass, y = PClass)) +
-    geom_tile(aes(fill = Y), colour = "white") 
+  True <- factor(c(0,0,1,1), levels = c(0,1))
+  Predicted <- factor(c(0,1,0,1), levels = c(1,0))
+
+  df <- data.frame(True, Predicted, Y)
   
-  if (prop) {
-    plot <- plot + geom_text(aes(label = sprintf("%.2f", Y)), vjust = 1)
-  } else
-    plot <- plot + geom_text(aes(label = sprintf("%1.0f", Y)), vjust = 1)
+  plot <-
+    ggplot(data = df, mapping = aes(x = True, y = Predicted)) +
+    geom_tile(aes(fill = Y), colour = "white")  + 
+    geom_text(aes(label = sprintf("%.2f", Y)), vjust = 1)
     
-  plot <- 
-    plot + 
-    scale_fill_gradient(low = "blue", high = "red") +
-    theme_bw() + theme(legend.position = "none")
-  
-  plot %>% print
-  
+    
+  if (prop) {
+    plot <-
+      plot +  
+      scale_fill_gradient(low = "#0000FF",  high ="#FF0000", 
+                          guide = "colourbar", limits = c(0, 1), 
+                          name = element_text('Proportion', face = 'plain'))
+  } else {
+    plot <-
+      plot + 
+      scale_fill_gradient(low = "#0000FF",  high ="#FF0000", 
+                        guide = "colourbar", limits = c(0, sum(tn, tp, fn, fp)), 
+                        name = element_text('Count', face = 'plain'))
+  }
+    
+  plot 
 }

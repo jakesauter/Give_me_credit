@@ -1,19 +1,28 @@
 ---
 title: "Give Me Credit -- Notebook"
-output: html_notebook 
+output: 
+  github_document:
+    toc: true
 ---
 
-### Phase 1 & 2: Data Exploration / Correction 
+# Phase 1: Data Exploration / Correction 
 
 We will need **dplyr** in order to make sense of our 
 data as well as make possible modifications. **ggplot2** will 
 be a helpful visualization tool during this journey. **purrr**
 will assist us in it useful maping function for iteration.
 
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(fig.height = 3)
+# knitr::opts_chunk$set(fig.width = 5)
+knitr::opts_chunk$set(cache = FALSE)
+```
+
 ```{r}
 library(dplyr)
 library(purrr)
 library(ggplot2)
+suppressWarnings(library(cowplot))
 ```
 
 ```{r}
@@ -23,6 +32,7 @@ source("R/utils.R")
 Now lets load in the data and begin exploring! The first
 thing we will do is take a look at what variables we have 
 to work with and their types. 
+
 ```{r}
 df <- load_all_training_data()
 df %>% map(~typeof(.x))
@@ -31,6 +41,7 @@ df %>% map(~typeof(.x))
 I always think it is a good idea to see a few samples
 of they data you are working with as well, so here are 
 the first 5 rows.
+
 ```{r}
 df %>% head(n = 5L)
 ```
@@ -47,6 +58,8 @@ about .066, showing that the dataset is mostly filled
 with people who did not default on their loans. 
 
 
+## Age vs Serious Deliquency
+
 Plot the distributions of people who defaulted vs age,
 in general we should see that younger people default more
 as credit agencies must give mortgage to those who are
@@ -57,6 +70,9 @@ ggplot(df) +
   geom_histogram(aes(x = age), bins = 20) + 
   facet_wrap(~SeriousDlqin2yrs)
 ```
+
+
+## Debt Ratio 
 
 Now lets get a 5 number summary of the debt ratio
 ```{r}
@@ -87,6 +103,9 @@ df %>%
   select(DebtRatio, MonthlyIncome) %>% 
   summary
 ```
+
+
+## Validating Monthly Income Outliers
 
 We see that these outliers either have a monthly income
 of 0, 1 or NA. This seems like it could be a data-entry error, lets see if 
@@ -123,7 +142,7 @@ their credit more than usual?
 df %>% 
   filter(DebtRatio > 3489.025 & !is.na(MonthlyIncome)) %>% 
   select(SeriousDlqin2yrs) %>% 
-  summarise(mean = mean(SeriousDlqin2yrs))
+  summarise(mean = mean(SeriousDlqin2yrs)) 
 ```
 
 I couldn't quite understand why/how this subset of 
@@ -142,6 +161,8 @@ should probably not be predicting anyway
 df <- df %>% 
   filter(!is.na(MonthlyIncome) && DebtRatio < 3489.025)
 ```
+
+## Number of 90 Days Late
 
 Now lets take a look at the number of 90 days late variable
 
@@ -172,6 +193,8 @@ rate at around 55%, compared to the popululation seen
 above at 6%
 
 
+### Winsorization of Late Variables
+
 This might be a good time to implement Winsorization
 https://en.wikipedia.org/wiki/Winsorizing -- The act of 
 transforming statistics by limiting extreme values to 
@@ -200,6 +223,8 @@ df %>%
          NumberOfTimes90DaysLate) %>% 
   summary
 ```
+
+## Revolving Utilization of Unsecured Lines
 
 The last variable that we are going to take a look at is 
 revolving utilization of unsecured lines (RUUL)
@@ -230,7 +255,8 @@ x <- df %>%
 ```
 
 ```{r}
-x %>% count
+x %>% 
+  count 
 ```
 
 ```{r}
@@ -349,7 +375,7 @@ x %>%
 30k entries did not have a monthly income so thats why so many
 people have the median value that we calculated 
 
-### Phase 3: Modelling 
+# Phase 2: Modelling 
 
 Now that we have some understanding of our data and have filtered out cases
 that are easily discernable or outliers that will negatively affect our model, 
@@ -361,7 +387,7 @@ a classifier robust to these, such as the **Random Forest** model. A random
 forest is simplistic model, though has proven itself to be
 very effective in many fields.
 
-#### 3.1 Random Forest 
+## Random Forest 
 
 We will use the **randomForest** package in R for this model. 
 
@@ -385,21 +411,21 @@ use a classification tree as opposed to a regression tree
 in the randomForest package. Once our model is trained we can 
 save it into rds format so that it is reloadable.
 
+```{r }
+if (!exists('rf_model')) {
+  rf_model <- readRDS(file = "rf_model_2500.rds")
+}
 
-```{r, eval = FALSE}
-# rf_model_2500 <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 2500,
-#                          xtest = xtest, ytest = ytest, keep.forest = TRUE)
+if (!exists('raw_preds') && !file.exists('predictions.rds')) {
+  raw_preds <- predict(rf_model, test %>% select(-SeriousDlqin2yrs), type = 'prob')
+  saveRDS(object = raw_preds, file = 'predictions.rds')
+} else if (!exists('raw_preds')) {
+  raw_preds <- readRDS('predictions.rds')
+}
 
-# saveRDS(rf_model_2500, file = 'rf_model_2500.rds')
-```
-
-```{r}
-rf_model <- readRDS(file = "rf_model_2500.rds")
-
-raw_preds <- predict(rf_model, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
 
-confusion_matrix(test, preds, clf_thresh = .5)
+confusion_matrix(test$SeriousDlqin2yrs, preds, clf_thresh = .5)
 ```
 
 
@@ -413,6 +439,20 @@ clf_thresh <- roc %>% select_threshold(FPR = .25)
 
 confusion_matrix(test, preds, clf_thresh = clf_thresh)
 ```
+
+## SVM 
+
+svm model here
+
+## Naieve Bayes
+
+model here
+
+## neural net 
+
+neural net here 
+
+
 
 
 
