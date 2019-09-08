@@ -54,7 +54,8 @@ Lets take a look at how balanced the labels that we
 are trying to predict are in the dataset we are given. 
 
 ```{r}
-df$SeriousDlqin2yrs %>% mean
+df %>% 
+  summarise(mean(SeriousDlqin2yrs))
 ```
 
 We see that the mean of this set of binary labels is 
@@ -80,7 +81,9 @@ ggplot(df) +
 
 Now lets get a 5 number summary of the debt ratio
 ```{r}
-summary(df$DebtRatio)
+df %>% 
+  select(DebtRatio) %>% 
+  summary
 ```
 
 As a developing statistician, it is a good thing to note that 
