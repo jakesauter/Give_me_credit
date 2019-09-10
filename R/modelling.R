@@ -21,11 +21,31 @@ library(dplyr)
 # Random Forest
 ######################
 
+source('./R/utils.R')
+library(dplyr)
+library(magrittr)
+
 load_model_data()
 
-train$SeriousDlqin2yrs %<>% as.factor()
 xtest <- test %>% select(-SeriousDlqin2yrs)
 ytest <- test$SeriousDlqin2yrs %>% as.factor
+
+library(e1071)
+
+start <- Sys.time()
+model <- svm(x = train %>% select(-SeriousDlqin2yrs), 
+             y = as.factor(train$SeriousDlqin2yrs))
+stop <- Sys.time()
+
+cat('total training time: ', stop-start)
+
+preds <- predict(model, xtest, probability = TRUE)
+
+saveRDS(preds, 'svm_preds.rds')
+
+
+
+
 
 # 
 # cat('training rf model with 2500 trees ...\n')
@@ -51,20 +71,20 @@ ytest <- test$SeriousDlqin2yrs %>% as.factor
 
 # rf_model <- readRDS('rf_model.rds')
 
-rf_model <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 2,
-                               xtest = xtest, ytest = ytest, keep.forest = TRUE)
-
-raw_preds <- predict(rf_model, test %>% select(-SeriousDlqin2yrs), type = 'prob')
-
-preds <- raw_preds[,2] %>% unname
-
-confusion_matrix(test, preds, clf_thresh = .5)
-
-roc <- simple_roc(test$SeriousDlqin2yrs, preds)
-
-clf_thresh <- roc %>% select_threshold(FPR = .25)
-
-confusion_matrix(test, preds, clf_thresh = clf_thresh)
+# rf_model <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 2,
+#                                xtest = xtest, ytest = ytest, keep.forest = TRUE)
+# 
+# raw_preds <- predict(rf_model, test %>% select(-SeriousDlqin2yrs), type = 'prob')
+# 
+# preds <- raw_preds[,2] %>% unname
+# 
+# confusion_matrix(test, preds, clf_thresh = .5)
+# 
+# roc <- simple_roc(test$SeriousDlqin2yrs, preds)
+# 
+# clf_thresh <- roc %>% select_threshold(FPR = .25)
+# 
+# confusion_matrix(test, preds, clf_thresh = clf_thresh)
 
 
 ## TODO read paper on tuning random forest and train better random forest, train

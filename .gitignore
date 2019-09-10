@@ -3,4 +3,5 @@ data/*
 .RData*
 .Rhistory
 *model*.rds
+*.rds
 .Rproj.user

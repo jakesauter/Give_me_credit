@@ -14,8 +14,6 @@ be a helpful visualization tool during this journey. **purrr**
 will assist us in it useful maping function for iteration.
 
 ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(fig.height = 3)
-# knitr::opts_chunk$set(fig.width = 5)
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
@@ -455,7 +453,14 @@ confusion_matrix(test, preds, clf_thresh = clf_thresh)
 
 ## SVM 
 
-svm model here
+```{r}
+library(e1071)
+
+train
+
+model <- svm(x = df %>% select(-SeriousDlqin2yrs), 
+             y = df$SeriousDlqin2yrs)
+```
 
 ## Naieve Bayes
 
