@@ -96,11 +96,11 @@ cat('training rf model with 10000 trees ...\n')
 
 start <- Sys.start()
 rf_model_10000 <- randomForest(x = train %>% select(-SeriousDlqin2yrs), 
-                              y = as.factor(train$SeriousDlqin2yrs), 
-                              ntree = 10000,
-                              xtest = xtest, 
-                              ytest = ytest, 
-                              keep.forest = TRUE)
+                               y = as.factor(train$SeriousDlqin2yrs), 
+                               ntree = 10000,
+                               xtest = xtest, 
+                               ytest = ytest, 
+                               keep.forest = TRUE)
 stop <- Sys.start()
 
 sink(file = 'rf_model_10000_train_time.txt')
