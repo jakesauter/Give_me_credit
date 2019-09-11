@@ -38,14 +38,19 @@ load_model_data()
 xtest <- test %>% select(-SeriousDlqin2yrs)
 ytest <- test$SeriousDlqin2yrs %>% as.factor
 
+
 #############################################################################
 # Random forest with 2500 trees
 #============================================================================
 cat('training rf model with 2500 trees ...\n')
 
 start <- Sys.time()
-rf_model_2500 <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 2500,
-                         xtest = xtest, ytest = ytest, keep.forest = TRUE)
+rf_model_2500 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+                              y = as.factor(train$SeriousDlqin2yrs), 
+                              ntree = 2500,
+                              xtest = xtest, 
+                              ytest = ytest, 
+                              keep.forest = TRUE)
 stop <- Sys.time()
 
 sink(file = 'rf_model_2500_train_time.txt')
@@ -65,8 +70,12 @@ cat('acc: ', acc, file = 'rf_2500_acc.txt')
 cat('training rf model with 5000 trees ...\n')
 
 start <- Sys.time()
-rf_model_5000 <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 5000,
-                           xtest = xtest, ytest = ytest, keep.forest = TRUE)
+rf_model_5000 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+                              y = as.factor(train$SeriousDlqin2yrs), 
+                              ntree = 5000,
+                              xtest = xtest, 
+                              ytest = ytest, 
+                              keep.forest = TRUE)
 stop <- Sys.time()
 
 sink(file = 'rf_model_5000_train_time.txt')
@@ -86,8 +95,12 @@ cat('acc: ', acc, file = 'rf_model_5000_acc.txt')
 cat('training rf model with 10000 trees ...\n')
 
 start <- Sys.start()
-rf_model_10000 <- randomForest(SeriousDlqin2yrs ~ ., train, ntree = 10000,
-                              xtest = xtest, ytest = ytest, keep.forest = TRUE)
+rf_model_10000 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+                              y = as.factor(train$SeriousDlqin2yrs), 
+                              ntree = 10000,
+                              xtest = xtest, 
+                              ytest = ytest, 
+                              keep.forest = TRUE)
 stop <- Sys.start()
 
 sink(file = 'rf_model_10000_train_time.txt')
