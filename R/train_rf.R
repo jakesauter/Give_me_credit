@@ -1,14 +1,5 @@
 #!/usr/bin/Rscript
 
-# load in the data and filter from what we learned in data exploration phase
-
-library(randomForest)
-library(magrittr)
-library(dplyr)
-
-########################################################################################
-
-########################################################################################
 
 ## TODO: try 
 # 1. Random Forest
@@ -30,9 +21,12 @@ library(dplyr)
 # Random Forest
 ######################
 
-library(dplyr)
+library(randomForest)
 library(magrittr)
+library(dplyr)
 
+# load in the data and filter from what we 
+# have learned in data exploration phase
 load_model_data()
 
 xtest <- test %>% select(-SeriousDlqin2yrs)

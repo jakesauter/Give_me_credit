@@ -1,10 +1,6 @@
 #!/usr/bin/Rscript
 
 
-library(randomForest)
-library(magrittr)
-library(dplyr)
-
 ## TODO: try 
 # 1. Random Forest
 # 2. SVM
@@ -17,17 +13,18 @@ library(dplyr)
 #########################
 # Support Vector Machine
 #########################
-
-library(dplyr)
 library(magrittr)
+library(dplyr)
+library(e1071)
 
-# load in the data and filter from what we learned in data exploration phase 
+
+# load in the data and filter from what we 
+# have learned in data exploration phase
 load_model_data()
 
 xtest <- test %>% select(-SeriousDlqin2yrs)
 ytest <- test$SeriousDlqin2yrs %>% as.factor
 
-library(e1071)
 
 #################################################################
 # SVM with Linear Kernel 
