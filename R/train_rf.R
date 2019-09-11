@@ -45,7 +45,7 @@ ytest <- test$SeriousDlqin2yrs %>% as.factor
 cat('training rf model with 2500 trees ...\n')
 
 start <- Sys.time()
-rf_model_2500 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+rf_model_2500 <- randomForest(x = train %>% select(-SeriousDlqin2yrs), 
                               y = as.factor(train$SeriousDlqin2yrs), 
                               ntree = 2500,
                               xtest = xtest, 
@@ -70,7 +70,7 @@ cat('acc: ', acc, file = 'rf_2500_acc.txt')
 cat('training rf model with 5000 trees ...\n')
 
 start <- Sys.time()
-rf_model_5000 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+rf_model_5000 <- randomForest(x = train %>% select(-SeriousDlqin2yrs), 
                               y = as.factor(train$SeriousDlqin2yrs), 
                               ntree = 5000,
                               xtest = xtest, 
@@ -95,7 +95,7 @@ cat('acc: ', acc, file = 'rf_model_5000_acc.txt')
 cat('training rf model with 10000 trees ...\n')
 
 start <- Sys.start()
-rf_model_10000 <- randomForest(x = train %>% select(SeriousDlqin2yrs), 
+rf_model_10000 <- randomForest(x = train %>% select(-SeriousDlqin2yrs), 
                               y = as.factor(train$SeriousDlqin2yrs), 
                               ntree = 10000,
                               xtest = xtest, 
