@@ -55,8 +55,9 @@ saveRDS(rf_model_2500, file = 'rf_model_2500.rds')
 
 raw_preds <- predict(rf_model_2500, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
+saveRDS(preds, 'rf_model_2500_preds.rds')
 acc <- mean(preds == ytest)
-cat('acc: ', acc, file = 'rf_2500_acc.txt')
+cat('acc: ', acc, file = 'rf_model_2500_acc.txt')
 
 #############################################################################
 # Random forest with 5000 trees
@@ -80,6 +81,7 @@ saveRDS(rf_model_5000, file = 'rf_model_5000.rds')
 
 raw_preds <- predict(rf_model_5000, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
+saveRDS(preds, 'rf_model_5000_preds.rds')
 acc <- mean(preds == ytest)
 cat('acc: ', acc, file = 'rf_model_5000_acc.txt')
 
@@ -105,6 +107,7 @@ saveRDS(rf_model_10000, file = 'rf_model_10000.rds')
 
 raw_preds <- predict(rf_model_10000, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
+saveRDS(preds, 'rf_model_10000_preds.rds')
 acc <- mean(preds == ytest)
 cat('acc: ', acc, file = 'rf_model_10000_acc.txt')
 #############################################################################
