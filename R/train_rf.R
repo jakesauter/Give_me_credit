@@ -53,9 +53,13 @@ sink()
 
 saveRDS(rf_model_2500, file = 'rf_model_2500.rds')
 
-raw_preds <- predict(rf_model_2500, test %>% select(-SeriousDlqin2yrs), type = 'prob')
+raw_preds <- predict(rf_model_2500, 
+                     test %>% select(-SeriousDlqin2yrs), 
+                     type = 'prob')
 preds <- raw_preds[,2] %>% unname
 saveRDS(preds, 'rf_model_2500_preds.rds')
+preds[preds > .5] = 1
+preds[preds < .5] = 0
 acc <- mean(preds == ytest)
 cat('acc: ', acc, file = 'rf_model_2500_acc.txt')
 
@@ -82,6 +86,8 @@ saveRDS(rf_model_5000, file = 'rf_model_5000.rds')
 raw_preds <- predict(rf_model_5000, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
 saveRDS(preds, 'rf_model_5000_preds.rds')
+preds[preds > .5] = 1
+preds[preds < .5] = 0
 acc <- mean(preds == ytest)
 cat('acc: ', acc, file = 'rf_model_5000_acc.txt')
 
@@ -108,6 +114,8 @@ saveRDS(rf_model_10000, file = 'rf_model_10000.rds')
 raw_preds <- predict(rf_model_10000, test %>% select(-SeriousDlqin2yrs), type = 'prob')
 preds <- raw_preds[,2] %>% unname
 saveRDS(preds, 'rf_model_10000_preds.rds')
+preds[preds > .5] = 1
+preds[preds < .5] = 0
 acc <- mean(preds == ytest)
 cat('acc: ', acc, file = 'rf_model_10000_acc.txt')
 #############################################################################
