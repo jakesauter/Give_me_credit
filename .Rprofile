@@ -5,6 +5,6 @@ library(rlang)
 library(tidyverse)
 library(feather)
 
-
-# 
-# source('R/utils.R')
+env <- new.env()
+source('R/utils.R', local = env)
+attach(env, name = 'local:utils')
