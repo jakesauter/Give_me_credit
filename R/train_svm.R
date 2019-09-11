@@ -33,8 +33,7 @@ ytest <- test$SeriousDlqin2yrs %>% as.factor
 start <- Sys.time()
 model <- svm(x = train %>% select(-SeriousDlqin2yrs), 
              y = as.factor(train$SeriousDlqin2yrs), 
-             kernel = 'linear', 
-             probability = TRUE)
+             kernel = 'linear')
 stop <- Sys.time()
 
 sink(file = "svm_linear_training_time.txt")
@@ -43,7 +42,7 @@ sink()
 
 cat('total training time: ', stop-start)
 
-preds <- predict(model, xtest, probability = TRUE)
+preds <- predict(model, xtest)
 
 saveRDS(preds, 'svm_preds.rds')
 
@@ -58,8 +57,7 @@ cat('acc: ', acc, file = 'svm_linear_acc.txt')
 start <- Sys.time()
 model <- svm(x = train %>% select(-SeriousDlqin2yrs), 
              y = as.factor(train$SeriousDlqin2yrs), 
-             kernel = 'polynomial', 
-             probability = TRUE)
+             kernel = 'polynomial')
 stop <- Sys.time()
 
 sink(file = "svm_poly_training_time.txt")
@@ -68,7 +66,7 @@ sink()
 
 cat('total training time: ', stop-start)
 
-preds <- predict(model, xtest, probability = TRUE)
+preds <- predict(model, xtest)
 
 saveRDS(preds, 'svm_poly_preds.rds')
 
@@ -83,9 +81,7 @@ cat('acc: ', acc, file = 'svm_poly_acc.txt')
 start <- Sys.time()
 model <- svm(x = train %>% select(-SeriousDlqin2yrs), 
              y = as.factor(train$SeriousDlqin2yrs), 
-             kernel = 'sigmoid', 
-             type = 'C-classification',
-             probability = TRUE)
+             kernel = 'sigmoid')
 stop <- Sys.time()
 
 sink(file = "svm_sigmoid_training_time.txt")
@@ -94,7 +90,7 @@ sink()
 
 cat('total training time: ', stop-start)
 
-preds <- predict(model, xtest, probability = TRUE)
+preds <- predict(model, xtest)
 
 saveRDS(preds, 'svm_sigmoid_preds.rds')
 
