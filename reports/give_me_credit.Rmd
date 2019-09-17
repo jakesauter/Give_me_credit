@@ -3,6 +3,7 @@ title: "Give Me Credit"
 output:
   github_document:
     toc: true
+    toc_depth: 2
     df_print: kable
 ---
 
