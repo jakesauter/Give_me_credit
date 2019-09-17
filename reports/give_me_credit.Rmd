@@ -15,7 +15,9 @@ be a helpful visualization tool during this journey. **purrr**
 will assist us in it useful maping function for iteration.
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(cache = FALSE, 
+                      warning = FALSE, 
+                      message = FALSE)
 ```
 
 ```{r includes, message=FALSE, warning=FALSE}

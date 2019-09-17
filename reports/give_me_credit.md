@@ -530,8 +530,6 @@ model$residuals %>%
   geom_histogram(aes(x = .))
 ```
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
 ![](give_me_credit_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 ``` r
@@ -647,21 +645,6 @@ We will use the **randomForest** package in R for this model.
 ``` r
 library(randomForest)
 ```
-
-    ## randomForest 4.6-14
-
-    ## Type rfNews() to see new features/changes/bug fixes.
-
-    ## 
-    ## Attaching package: 'randomForest'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     margin
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
 
 I have wrote a few functions to help with loading the data with proper
 filtering, as well as to help with model assessment.
