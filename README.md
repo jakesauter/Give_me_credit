@@ -121,7 +121,7 @@ ggplot(df) +
   facet_wrap(~SeriousDlqin2yrs)
 ```
 
-![](give_me_credit_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## Debt Ratio
 
@@ -548,7 +548,7 @@ model$residuals %>%
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](give_me_credit_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 ``` r
 model$coefficients
@@ -639,7 +639,7 @@ x %>%
   geom_histogram(aes(x = .), bins = 100)
 ```
 
-![](give_me_credit_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 30k entries did not have a monthly income so thats why so many people
 have the median value that we calculated
@@ -715,13 +715,13 @@ preds <- raw_preds[,2] %>% unname
 confusion_matrix(test$SeriousDlqin2yrs, preds, clf_thresh = .5)
 ```
 
-![](give_me_credit_files/figure-gfm/create-model-and-preds-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/create-model-and-preds-1.png)<!-- -->
 
 ``` r
 roc <- simple_roc(test$SeriousDlqin2yrs, preds)
 ```
 
-![](give_me_credit_files/figure-gfm/roc-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/roc-1.png)<!-- -->
 
 ``` r
 clf_thresh <- roc %>% select_threshold(FPR = .25)
@@ -734,7 +734,7 @@ clf_thresh <- roc %>% select_threshold(FPR = .25)
 confusion_matrix(test, preds, clf_thresh = clf_thresh)
 ```
 
-![](give_me_credit_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 # Future work
 
