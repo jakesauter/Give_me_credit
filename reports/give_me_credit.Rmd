@@ -1,10 +1,9 @@
 ---
 title: "Give Me Credit"
+author: "Jake Sauter"
 output:
   github_document:
     toc: true
-    toc_depth: 2
-    df_print: kable
 ---
 
 # Phase 1: Data Exploration / Correction 

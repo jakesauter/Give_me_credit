@@ -1,5 +1,6 @@
 Give Me Credit
 ================
+Jake Sauter
 
 # Phase 1: Data Exploration / Correction
 
@@ -34,43 +35,58 @@ names(df) %>%
   bind_rows
 ```
 
-<div class="kable-table">
-
-| Var                                  | Type    |
-| :----------------------------------- | :------ |
-| SeriousDlqin2yrs                     | integer |
-| RevolvingUtilizationOfUnsecuredLines | double  |
-| age                                  | integer |
-| NumberOfTime30.59DaysPastDueNotWorse | integer |
-| DebtRatio                            | double  |
-| MonthlyIncome                        | integer |
-| NumberOfOpenCreditLinesAndLoans      | integer |
-| NumberOfTimes90DaysLate              | integer |
-| NumberRealEstateLoansOrLines         | integer |
-| NumberOfTime60.89DaysPastDueNotWorse | integer |
-| NumberOfDependents                   | integer |
-
-</div>
+    ## # A tibble: 11 x 2
+    ##    Var                                  Type   
+    ##    <chr>                                <chr>  
+    ##  1 SeriousDlqin2yrs                     integer
+    ##  2 RevolvingUtilizationOfUnsecuredLines double 
+    ##  3 age                                  integer
+    ##  4 NumberOfTime30.59DaysPastDueNotWorse integer
+    ##  5 DebtRatio                            double 
+    ##  6 MonthlyIncome                        integer
+    ##  7 NumberOfOpenCreditLinesAndLoans      integer
+    ##  8 NumberOfTimes90DaysLate              integer
+    ##  9 NumberRealEstateLoansOrLines         integer
+    ## 10 NumberOfTime60.89DaysPastDueNotWorse integer
+    ## 11 NumberOfDependents                   integer
 
 I always think it is a good idea to see a few samples of they data you
-are working with as well, so here are the first 5
-rows.
+are working with as well, so here are the first 5 rows.
 
 ``` r
 df %>% head(n = 5L)
 ```
 
-<div class="kable-table">
-
-| SeriousDlqin2yrs | RevolvingUtilizationOfUnsecuredLines | age | NumberOfTime30.59DaysPastDueNotWorse | DebtRatio | MonthlyIncome | NumberOfOpenCreditLinesAndLoans | NumberOfTimes90DaysLate | NumberRealEstateLoansOrLines | NumberOfTime60.89DaysPastDueNotWorse | NumberOfDependents |
-| ---------------: | -----------------------------------: | --: | -----------------------------------: | --------: | ------------: | ------------------------------: | ----------------------: | ---------------------------: | -----------------------------------: | -----------------: |
-|                1 |                            0.7661266 |  45 |                                    2 | 0.8029821 |          9120 |                              13 |                       0 |                            6 |                                    0 |                  2 |
-|                0 |                            0.9571510 |  40 |                                    0 | 0.1218762 |          2600 |                               4 |                       0 |                            0 |                                    0 |                  1 |
-|                0 |                            0.6581801 |  38 |                                    1 | 0.0851134 |          3042 |                               2 |                       1 |                            0 |                                    0 |                  0 |
-|                0 |                            0.2338098 |  30 |                                    0 | 0.0360497 |          3300 |                               5 |                       0 |                            0 |                                    0 |                  0 |
-|                0 |                            0.9072394 |  49 |                                    1 | 0.0249257 |         63588 |                               7 |                       0 |                            1 |                                    0 |                  0 |
-
-</div>
+    ##   SeriousDlqin2yrs RevolvingUtilizationOfUnsecuredLines age
+    ## 1                1                            0.7661266  45
+    ## 2                0                            0.9571510  40
+    ## 3                0                            0.6581801  38
+    ## 4                0                            0.2338098  30
+    ## 5                0                            0.9072394  49
+    ##   NumberOfTime30.59DaysPastDueNotWorse  DebtRatio MonthlyIncome
+    ## 1                                    2 0.80298213          9120
+    ## 2                                    0 0.12187620          2600
+    ## 3                                    1 0.08511338          3042
+    ## 4                                    0 0.03604968          3300
+    ## 5                                    1 0.02492570         63588
+    ##   NumberOfOpenCreditLinesAndLoans NumberOfTimes90DaysLate
+    ## 1                              13                       0
+    ## 2                               4                       0
+    ## 3                               2                       1
+    ## 4                               5                       0
+    ## 5                               7                       0
+    ##   NumberRealEstateLoansOrLines NumberOfTime60.89DaysPastDueNotWorse
+    ## 1                            6                                    0
+    ## 2                            0                                    0
+    ## 3                            0                                    0
+    ## 4                            0                                    0
+    ## 5                            1                                    0
+    ##   NumberOfDependents
+    ## 1                  2
+    ## 2                  1
+    ## 3                  0
+    ## 4                  0
+    ## 5                  0
 
 Lets take a look at how balanced the labels that we are trying to
 predict are in the dataset we are given.
@@ -80,13 +96,8 @@ df %>%
   summarise(mean(SeriousDlqin2yrs))
 ```
 
-<div class="kable-table">
-
-| mean(SeriousDlqin2yrs) |
-| ---------------------: |
-|                0.06684 |
-
-</div>
+    ##   mean(SeriousDlqin2yrs)
+    ## 1                0.06684
 
 We see that the mean of this set of binary labels is about .066, showing
 that the dataset is mostly filled with people who did not default on
@@ -209,13 +220,8 @@ df %>%
   summarise(mean = mean(SeriousDlqin2yrs)) 
 ```
 
-<div class="kable-table">
-
-|      mean |
-| --------: |
-| 0.0702703 |
-
-</div>
+    ##         mean
+    ## 1 0.07027027
 
 I couldn’t quite understand why/how this subset of candiates owe 3500
 times more than they are generating and do not have a higher than usual
@@ -244,31 +250,26 @@ df %>%
   set_names(c('Value', 'Frequency'))
 ```
 
-<div class="kable-table">
-
-| Value | Frequency |
-| :---- | --------: |
-| 0     |    141662 |
-| 1     |      5243 |
-| 2     |      1555 |
-| 3     |       667 |
-| 4     |       291 |
-| 5     |       131 |
-| 6     |        80 |
-| 7     |        38 |
-| 8     |        21 |
-| 9     |        19 |
-| 10    |         8 |
-| 11    |         5 |
-| 12    |         2 |
-| 13    |         4 |
-| 14    |         2 |
-| 15    |         2 |
-| 17    |         1 |
-| 96    |         5 |
-| 98    |       264 |
-
-</div>
+    ##    Value Frequency
+    ## 1      0    141662
+    ## 2      1      5243
+    ## 3      2      1555
+    ## 4      3       667
+    ## 5      4       291
+    ## 6      5       131
+    ## 7      6        80
+    ## 8      7        38
+    ## 9      8        21
+    ## 10     9        19
+    ## 11    10         8
+    ## 12    11         5
+    ## 13    12         2
+    ## 14    13         4
+    ## 15    14         2
+    ## 16    15         2
+    ## 17    17         1
+    ## 18    96         5
+    ## 19    98       264
 
 It is interesting that no one is between 17 and 96 times late. Lets take
 a lot at these records
@@ -391,13 +392,10 @@ x %>%
   count 
 ```
 
-<div class="kable-table">
-
-|     n |
-| ----: |
-| 19805 |
-
-</div>
+    ## # A tibble: 1 x 1
+    ##       n
+    ##   <int>
+    ## 1 19805
 
 ``` r
 x %>% summary
@@ -427,13 +425,10 @@ x <- df %>%
 x %>% count
 ```
 
-<div class="kable-table">
-
-|  n |
-| -: |
-| 23 |
-
-</div>
+    ## # A tibble: 1 x 1
+    ##       n
+    ##   <int>
+    ## 1    23
 
 ``` r
 x %>% 
@@ -472,13 +467,10 @@ x <- df %>%
 x %>% count
 ```
 
-<div class="kable-table">
-
-|   n |
-| --: |
-| 241 |
-
-</div>
+    ## # A tibble: 1 x 1
+    ##       n
+    ##   <int>
+    ## 1   241
 
 ``` r
 x %>% summary
