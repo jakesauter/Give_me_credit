@@ -1,5 +1,6 @@
 ---
-title: "Give Me Credit -- Notebook"
+title: "Give Me Credit"
+author: "Jake Sauter"
 output: 
   github_document:
     toc: true
@@ -20,12 +21,15 @@ knitr::opts_chunk$set(cache = FALSE)
 ```{r includes, message=FALSE, warning=FALSE}
 library(dplyr)
 library(purrr)
+library(tidyr)
 library(ggplot2)
 library(cowplot)
+library(magrittr)
 ```
 
 ```{r}
-source("R/utils.R")
+source("../R/utils.R")
+source("../R/load_data.R")
 ```
 
 Now lets load in the data and begin exploring! The first
@@ -422,9 +426,12 @@ use a classification tree as opposed to a regression tree
 in the randomForest package. Once our model is trained we can 
 save it into rds format so that it is reloadable.
 
-```{r }
-if (!exists('rf_model')) {
-  rf_model <- readRDS(file = "rf_model_2500.rds")
+```{r create-model-and-preds}
+model_file <- "../models/rf_model_2500.rds"
+if (!exists('rf_model') && file.exists(model_file)) {
+  rf_model <- readRDS(file = model_file)
+} else {
+  # train rf model  
 }
 
 if (!exists('raw_preds') && !file.exists('predictions.rds')) {
@@ -440,7 +447,7 @@ confusion_matrix(test$SeriousDlqin2yrs, preds, clf_thresh = .5)
 ```
 
 
-```{r}
+```{r roc}
 roc <- simple_roc(test$SeriousDlqin2yrs, preds)
 ```
 
@@ -451,24 +458,31 @@ clf_thresh <- roc %>% select_threshold(FPR = .25)
 confusion_matrix(test, preds, clf_thresh = clf_thresh)
 ```
 
-## SVM 
+# Future work 
 
-```{r}
-library(e1071)
+* Class imbalanced sampling methods 
+* **SVM** 
+* **Naieve Bayes** 
+* **Neural Network**
 
-train
+<!-- ## SVM  -->
 
-model <- svm(x = df %>% select(-SeriousDlqin2yrs), 
-             y = df$SeriousDlqin2yrs)
-```
+<!-- ```{r} -->
+<!-- library(e1071) -->
 
-## Naieve Bayes
+<!-- train -->
 
-model here
+<!-- model <- svm(x = df %>% select(-SeriousDlqin2yrs),  -->
+<!--              y = df$SeriousDlqin2yrs) -->
+<!-- ``` -->
 
-## neural net 
+<!-- ## Naieve Bayes -->
 
-neural net here 
+<!-- model here -->
+
+<!-- ## neural net  -->
+
+<!-- neural net here  -->
 
 
 
