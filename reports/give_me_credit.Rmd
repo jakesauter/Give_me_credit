@@ -1,7 +1,6 @@
 ---
 title: "Give Me Credit"
-author: "Jake Sauter"
-output: 
+output:
   github_document:
     toc: true
     df_print: kable

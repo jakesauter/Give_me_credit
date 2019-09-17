@@ -1,6 +1,5 @@
 Give Me Credit
 ================
-Jake Sauter
 
 # Phase 1: Data Exploration / Correction
 
