@@ -109,7 +109,7 @@ We see that the mean of this set of binary labels is about .066, showing
 that the dataset is mostly filled with people who did not default on
 their loans.
 
-## Age vs Serious Deliquency
+ Age vs Serious Deliquency
 
 Plot the distributions of people who defaulted vs age, in general we
 should see that younger people default more as credit agencies must give
@@ -123,7 +123,7 @@ ggplot(df) +
 
 ![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-## Debt Ratio
+ Debt Ratio
 
 Now lets get a 5 number summary of the debt ratio
 
@@ -133,13 +133,13 @@ df %>%
   summary
 ```
 
-    ##    DebtRatio       
-    ##  Min.   :     0.0  
-    ##  1st Qu.:     0.2  
-    ##  Median :     0.4  
-    ##  Mean   :   353.0  
-    ##  3rd Qu.:     0.9  
-    ##  Max.   :329664.0
+        DebtRatio       
+      Min.   :     0.0  
+      1st Qu.:     0.2  
+      Median :     0.4  
+      Mean   :   353.0  
+      3rd Qu.:     0.9  
+      Max.   :329664.0
 
 As a developing statistician, it is a good thing to note that this is
 the same analysis as rounded quanitles by quarters (quartiles)
@@ -148,8 +148,8 @@ the same analysis as rounded quanitles by quarters (quartiles)
 df$DebtRatio %>% quantile(probs = seq(0, 1, .25)) %>% round(2)
 ```
 
-    ##        0%       25%       50%       75%      100% 
-    ##      0.00      0.18      0.37      0.87 329664.00
+            0%       25%       50%       75%      100% 
+          0.00      0.18      0.37      0.87 329664.00
 
 Its concerning that we see that someone owes 300,000 times more than
 they own, is this person a single outlier?
@@ -158,8 +158,8 @@ they own, is this person a single outlier?
 df$DebtRatio %>% quantile(.975)
 ```
 
-    ##    97.5% 
-    ## 3489.025
+        97.5% 
+     3489.025
 
 From this statistic we can see that 2.5% of the dataset owes more than
 3,500 times what they own. We need to investigate further to see if
@@ -172,16 +172,16 @@ df %>%
   summary
 ```
 
-    ##    DebtRatio      MonthlyIncome  
-    ##  Min.   :  3490   Min.   :0.000  
-    ##  1st Qu.:  3957   1st Qu.:0.000  
-    ##  Median :  4619   Median :0.000  
-    ##  Mean   :  5918   Mean   :0.065  
-    ##  3rd Qu.:  5790   3rd Qu.:0.000  
-    ##  Max.   :329664   Max.   :1.000  
-    ##                   NA's   :3565
+        DebtRatio      MonthlyIncome  
+      Min.   :  3490   Min.   :0.000  
+      1st Qu.:  3957   1st Qu.:0.000  
+      Median :  4619   Median :0.000  
+      Mean   :  5918   Mean   :0.065  
+      3rd Qu.:  5790   3rd Qu.:0.000  
+      Max.   :329664   Max.   :1.000  
+                       NA's   :3565
 
-## Validating Monthly Income Outliers
+ Validating Monthly Income Outliers
 
 We see that these outliers either have a monthly income of 0, 1 or NA.
 This seems like it could be a data-entry error, lets see if there is any
@@ -202,15 +202,15 @@ corr %>%
   table
 ```
 
-    ## .
-    ## FALSE  TRUE 
-    ##    21   164
+     .
+     FALSE  TRUE 
+        21   164
 
 ``` r
 corr %>% mean
 ```
 
-    ## [1] 0.8864865
+     [1] 0.8864865
 
 We see that out of the 184 samples that have a valid monthly income, 164
 of them (88.6%) have the same value for Seriously Deliquent as for
@@ -248,7 +248,7 @@ df <- df %>%
   filter(!is.na(MonthlyIncome) && DebtRatio < 3489.025)
 ```
 
-## Number of 90 Days Late
+ Number of 90 Days Late
 
 Now lets take a look at the number of 90 days late variable
 
@@ -300,27 +300,27 @@ df %>%
   summary
 ```
 
-    ##  SeriousDlqin2yrs NumberOfTime30.59DaysPastDueNotWorse
-    ##  Min.   :0.0000   Min.   :96.00                       
-    ##  1st Qu.:0.0000   1st Qu.:98.00                       
-    ##  Median :1.0000   Median :98.00                       
-    ##  Mean   :0.5465   Mean   :97.96                       
-    ##  3rd Qu.:1.0000   3rd Qu.:98.00                       
-    ##  Max.   :1.0000   Max.   :98.00                       
-    ##  NumberOfTime60.89DaysPastDueNotWorse NumberOfTimes90DaysLate
-    ##  Min.   :96.00                        Min.   :96.00          
-    ##  1st Qu.:98.00                        1st Qu.:98.00          
-    ##  Median :98.00                        Median :98.00          
-    ##  Mean   :97.96                        Mean   :97.96          
-    ##  3rd Qu.:98.00                        3rd Qu.:98.00          
-    ##  Max.   :98.00                        Max.   :98.00
+      SeriousDlqin2yrs NumberOfTime30.59DaysPastDueNotWorse
+      Min.   :0.0000   Min.   :96.00                       
+      1st Qu.:0.0000   1st Qu.:98.00                       
+      Median :1.0000   Median :98.00                       
+      Mean   :0.5465   Mean   :97.96                       
+      3rd Qu.:1.0000   3rd Qu.:98.00                       
+      Max.   :1.0000   Max.   :98.00                       
+      NumberOfTime60.89DaysPastDueNotWorse NumberOfTimes90DaysLate
+      Min.   :96.00                        Min.   :96.00          
+      1st Qu.:98.00                        1st Qu.:98.00          
+      Median :98.00                        Median :98.00          
+      Mean   :97.96                        Mean   :97.96          
+      3rd Qu.:98.00                        3rd Qu.:98.00          
+      Max.   :98.00                        Max.   :98.00
 
 This sample of subjects has the same exact number of times late for all
 three recorded categories, though this might not be an entry error as
 they do have a very high default rate at around 55%, compared to the
 popululation seen above at 6%
 
-### Winsorization of Late Variables
+# Winsorization of Late Variables
 
 This might be a good time to implement Winsorization
 <https://en.wikipedia.org/wiki/Winsorizing> – The act of transforming
@@ -350,22 +350,22 @@ df %>%
   summary
 ```
 
-    ##  SeriousDlqin2yrs  NumberOfTime30.59DaysPastDueNotWorse
-    ##  Min.   :0.00000   Min.   : 0.0000                     
-    ##  1st Qu.:0.00000   1st Qu.: 0.0000                     
-    ##  Median :0.00000   Median : 0.0000                     
-    ##  Mean   :0.06684   Mean   : 0.2812                     
-    ##  3rd Qu.:0.00000   3rd Qu.: 0.0000                     
-    ##  Max.   :1.00000   Max.   :20.0000                     
-    ##  NumberOfTime60.89DaysPastDueNotWorse NumberOfTimes90DaysLate
-    ##  Min.   : 0.0000                      Min.   : 0.0000        
-    ##  1st Qu.: 0.0000                      1st Qu.: 0.0000        
-    ##  Median : 0.0000                      Median : 0.0000        
-    ##  Mean   : 0.1006                      Mean   : 0.1262        
-    ##  3rd Qu.: 0.0000                      3rd Qu.: 0.0000        
-    ##  Max.   :20.0000                      Max.   :20.0000
+      SeriousDlqin2yrs  NumberOfTime30.59DaysPastDueNotWorse
+      Min.   :0.00000   Min.   : 0.0000                     
+      1st Qu.:0.00000   1st Qu.: 0.0000                     
+      Median :0.00000   Median : 0.0000                     
+      Mean   :0.06684   Mean   : 0.2812                     
+      3rd Qu.:0.00000   3rd Qu.: 0.0000                     
+      Max.   :1.00000   Max.   :20.0000                     
+      NumberOfTime60.89DaysPastDueNotWorse NumberOfTimes90DaysLate
+      Min.   : 0.0000                      Min.   : 0.0000        
+      1st Qu.: 0.0000                      1st Qu.: 0.0000        
+      Median : 0.0000                      Median : 0.0000        
+      Mean   : 0.1006                      Mean   : 0.1262        
+      3rd Qu.: 0.0000                      3rd Qu.: 0.0000        
+      Max.   :20.0000                      Max.   :20.0000
 
-## Revolving Utilization of Unsecured Lines
+ Revolving Utilization of Unsecured Lines
 
 The last variable that we are going to take a look at is revolving
 utilization of unsecured lines (RUUL)
@@ -382,13 +382,13 @@ df %>%
   summary
 ```
 
-    ##  RevolvingUtilizationOfUnsecuredLines
-    ##  Min.   :    0.00                    
-    ##  1st Qu.:    0.03                    
-    ##  Median :    0.15                    
-    ##  Mean   :    6.05                    
-    ##  3rd Qu.:    0.56                    
-    ##  Max.   :50708.00
+      RevolvingUtilizationOfUnsecuredLines
+      Min.   :    0.00                    
+      1st Qu.:    0.03                    
+      Median :    0.15                    
+      Mean   :    6.05                    
+      3rd Qu.:    0.56                    
+      Max.   :50708.00
 
 Possibly more interesting than an individual having a debt ratio greater
 than 2500 is an individual having a RUUL of 50,708. Something is most
@@ -420,13 +420,13 @@ x %>%
 x %>% summary
 ```
 
-    ##  RevolvingUtilizationOfUnsecuredLines SeriousDlqin2yrs
-    ##  Min.   :0.9000                       Min.   :0.0000  
-    ##  1st Qu.:0.9796                       1st Qu.:0.0000  
-    ##  Median :1.0000                       Median :0.0000  
-    ##  Mean   :1.0146                       Mean   :0.2254  
-    ##  3rd Qu.:1.0000                       3rd Qu.:0.0000  
-    ##  Max.   :3.9960                       Max.   :1.0000
+      RevolvingUtilizationOfUnsecuredLines SeriousDlqin2yrs
+      Min.   :0.9000                       Min.   :0.0000  
+      1st Qu.:0.9796                       1st Qu.:0.0000  
+      Median :1.0000                       Median :0.0000  
+      Mean   :1.0146                       Mean   :0.2254  
+      3rd Qu.:1.0000                       3rd Qu.:0.0000  
+      Max.   :3.9960                       Max.   :1.0000
 
 These entries have a default rate of ~ 22.5% – almost 1 in 4.
 
@@ -460,19 +460,19 @@ x %>%
   t()
 ```
 
-    ##                     [,1]              
-    ## X.Min.....4.075...  "Min.   :4.075  " 
-    ## X.1st.Qu..4.416...  "1st Qu.:4.416  " 
-    ## X.Median..5.214...  "Median :5.214  " 
-    ## X.Mean....5.420...  "Mean   :5.420  " 
-    ## X.3rd.Qu..5.689...  "3rd Qu.:5.689  " 
-    ## X.Max.....8.852...  "Max.   :8.852  " 
-    ## X.Min.....0.0000... "Min.   :0.0000  "
-    ## X.1st.Qu..0.0000... "1st Qu.:0.0000  "
-    ## X.Median..0.0000... "Median :0.0000  "
-    ## X.Mean....0.2609... "Mean   :0.2609  "
-    ## X.3rd.Qu..0.5000... "3rd Qu.:0.5000  "
-    ## X.Max.....1.0000... "Max.   :1.0000  "
+                         [,1]              
+     X.Min.....4.075...  "Min.   :4.075  " 
+     X.1st.Qu..4.416...  "1st Qu.:4.416  " 
+     X.Median..5.214...  "Median :5.214  " 
+     X.Mean....5.420...  "Mean   :5.420  " 
+     X.3rd.Qu..5.689...  "3rd Qu.:5.689  " 
+     X.Max.....8.852...  "Max.   :8.852  " 
+     X.Min.....0.0000... "Min.   :0.0000  "
+     X.1st.Qu..0.0000... "1st Qu.:0.0000  "
+     X.Median..0.0000... "Median :0.0000  "
+     X.Mean....0.2609... "Mean   :0.2609  "
+     X.3rd.Qu..0.5000... "3rd Qu.:0.5000  "
+     X.Max.....1.0000... "Max.   :1.0000  "
 
 There are only 23 records in this region, but they are defaulting at a
 very high rate, with this in mind lets take a look at records with an
@@ -501,13 +501,13 @@ x %>% count
 x %>% summary
 ```
 
-    ##  RevolvingUtilizationOfUnsecuredLines SeriousDlqin2yrs 
-    ##  Min.   :   11.39                     Min.   :0.00000  
-    ##  1st Qu.:  941.00                     1st Qu.:0.00000  
-    ##  Median : 2012.00                     Median :0.00000  
-    ##  Mean   : 3564.02                     Mean   :0.07054  
-    ##  3rd Qu.: 4116.00                     3rd Qu.:0.00000  
-    ##  Max.   :50708.00                     Max.   :1.00000
+      RevolvingUtilizationOfUnsecuredLines SeriousDlqin2yrs 
+      Min.   :   11.39                     Min.   :0.00000  
+      1st Qu.:  941.00                     1st Qu.:0.00000  
+      Median : 2012.00                     Median :0.00000  
+      Mean   : 3564.02                     Mean   :0.07054  
+      3rd Qu.: 4116.00                     3rd Qu.:0.00000  
+      Max.   :50708.00                     Max.   :1.00000
 
 But how can people have more debt than their credit limit? It could be
 from individuals maxxing out a credit card and having it closed – or if
@@ -537,7 +537,7 @@ model <- lm(MonthlyIncome~., clean_df)
 model$residuals %>% range
 ```
 
-    ## [1]  -69173.87 3000170.67
+     [1]  -69173.87 3000170.67
 
 ``` r
 model$residuals %>% 
@@ -546,7 +546,7 @@ model$residuals %>%
   geom_histogram(aes(x = .))
 ```
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+     `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](reports/give_me_credit_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
@@ -554,18 +554,18 @@ model$residuals %>%
 model$coefficients
 ```
 
-    ##                          (Intercept)                     SeriousDlqin2yrs 
-    ##                          2493.156834                          -763.982390 
-    ## RevolvingUtilizationOfUnsecuredLines                                  age 
-    ##                          -528.866878                            30.627968 
-    ## NumberOfTime30.59DaysPastDueNotWorse                            DebtRatio 
-    ##                           -36.968717                            -1.068722 
-    ##      NumberOfOpenCreditLinesAndLoans              NumberOfTimes90DaysLate 
-    ##                           108.705812                           -24.404721 
-    ##         NumberRealEstateLoansOrLines NumberOfTime60.89DaysPastDueNotWorse 
-    ##                          1236.305083                            18.771040 
-    ##                   NumberOfDependents 
-    ##                           724.677073
+                              (Intercept)                     SeriousDlqin2yrs 
+                              2493.156834                          -763.982390 
+     RevolvingUtilizationOfUnsecuredLines                                  age 
+                              -528.866878                            30.627968 
+     NumberOfTime30.59DaysPastDueNotWorse                            DebtRatio 
+                               -36.968717                            -1.068722 
+          NumberOfOpenCreditLinesAndLoans              NumberOfTimes90DaysLate 
+                               108.705812                           -24.404721 
+             NumberRealEstateLoansOrLines NumberOfTime60.89DaysPastDueNotWorse 
+                              1236.305083                            18.771040 
+                       NumberOfDependents 
+                               724.677073
 
 The **summary** function is overridden for model types so we can see the
 r squared there.
@@ -574,45 +574,45 @@ r squared there.
 model %>% summary
 ```
 
-    ## 
-    ## Call:
-    ## lm(formula = MonthlyIncome ~ ., data = clean_df)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ##  -69174   -2759    -998    1288 3000171 
-    ## 
-    ## Coefficients:
-    ##                                        Estimate Std. Error t value
-    ## (Intercept)                          2493.15683  187.42723  13.302
-    ## SeriousDlqin2yrs                     -763.98239  172.39455  -4.432
-    ## RevolvingUtilizationOfUnsecuredLines -528.86688  123.86129  -4.270
-    ## age                                    30.62797    3.04837  10.047
-    ## NumberOfTime30.59DaysPastDueNotWorse  -36.96872   61.91654  -0.597
-    ## DebtRatio                              -1.06872    0.09672 -11.050
-    ## NumberOfOpenCreditLinesAndLoans       108.70581    9.03886  12.027
-    ## NumberOfTimes90DaysLate               -24.40472   85.09222  -0.287
-    ## NumberRealEstateLoansOrLines         1236.30508   39.79621  31.066
-    ## NumberOfTime60.89DaysPastDueNotWorse   18.77104  100.45108   0.187
-    ## NumberOfDependents                    724.67707   36.94376  19.616
-    ##                                      Pr(>|t|)    
-    ## (Intercept)                           < 2e-16 ***
-    ## SeriousDlqin2yrs                     9.36e-06 ***
-    ## RevolvingUtilizationOfUnsecuredLines 1.96e-05 ***
-    ## age                                   < 2e-16 ***
-    ## NumberOfTime30.59DaysPastDueNotWorse    0.550    
-    ## DebtRatio                             < 2e-16 ***
-    ## NumberOfOpenCreditLinesAndLoans       < 2e-16 ***
-    ## NumberOfTimes90DaysLate                 0.774    
-    ## NumberRealEstateLoansOrLines          < 2e-16 ***
-    ## NumberOfTime60.89DaysPastDueNotWorse    0.852    
-    ## NumberOfDependents                    < 2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 14230 on 120085 degrees of freedom
-    ## Multiple R-squared:  0.02235,    Adjusted R-squared:  0.02227 
-    ## F-statistic: 274.5 on 10 and 120085 DF,  p-value: < 2.2e-16
+     
+     Call:
+     lm(formula = MonthlyIncome ~ ., data = clean_df)
+     
+     Residuals:
+         Min      1Q  Median      3Q     Max 
+      -69174   -2759    -998    1288 3000171 
+     
+     Coefficients:
+                                            Estimate Std. Error t value
+     (Intercept)                          2493.15683  187.42723  13.302
+     SeriousDlqin2yrs                     -763.98239  172.39455  -4.432
+     RevolvingUtilizationOfUnsecuredLines -528.86688  123.86129  -4.270
+     age                                    30.62797    3.04837  10.047
+     NumberOfTime30.59DaysPastDueNotWorse  -36.96872   61.91654  -0.597
+     DebtRatio                              -1.06872    0.09672 -11.050
+     NumberOfOpenCreditLinesAndLoans       108.70581    9.03886  12.027
+     NumberOfTimes90DaysLate               -24.40472   85.09222  -0.287
+     NumberRealEstateLoansOrLines         1236.30508   39.79621  31.066
+     NumberOfTime60.89DaysPastDueNotWorse   18.77104  100.45108   0.187
+     NumberOfDependents                    724.67707   36.94376  19.616
+                                          Pr(>|t|)    
+     (Intercept)                           < 2e-16 ***
+     SeriousDlqin2yrs                     9.36e-06 ***
+     RevolvingUtilizationOfUnsecuredLines 1.96e-05 ***
+     age                                   < 2e-16 ***
+     NumberOfTime30.59DaysPastDueNotWorse    0.550    
+     DebtRatio                             < 2e-16 ***
+     NumberOfOpenCreditLinesAndLoans       < 2e-16 ***
+     NumberOfTimes90DaysLate                 0.774    
+     NumberRealEstateLoansOrLines          < 2e-16 ***
+     NumberOfTime60.89DaysPastDueNotWorse    0.852    
+     NumberOfDependents                    < 2e-16 ***
+     ---
+     Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+     
+     Residual standard error: 14230 on 120085 degrees of freedom
+     Multiple R-squared:  0.02235,    Adjusted R-squared:  0.02227 
+     F-statistic: 274.5 on 10 and 120085 DF,  p-value: < 2.2e-16
 
 Our adjusted R squared value (penalizes for model size) is .022 – only
 slightly better than guessing the mean
@@ -656,7 +656,7 @@ with a classifier robust to these, such as the **Random Forest** model.
 A random forest is simplistic model, though has proven itself to be very
 effective in many fields.
 
-## Random Forest
+ Random Forest
 
 We will use the **randomForest** package in R for this model.
 
@@ -664,20 +664,20 @@ We will use the **randomForest** package in R for this model.
 library(randomForest)
 ```
 
-    ## randomForest 4.6-14
+     randomForest 4.6-14
 
-    ## Type rfNews() to see new features/changes/bug fixes.
+     Type rfNews() to see new features/changes/bug fixes.
 
-    ## 
-    ## Attaching package: 'randomForest'
+     
+     Attaching package: 'randomForest'
 
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     margin
+     The following object is masked from 'package:ggplot2':
+     
+         margin
 
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
+     The following object is masked from 'package:dplyr':
+     
+         combine
 
 I have wrote a few functions to help with loading the data with proper
 filtering, as well as to help with model assessment.
@@ -727,8 +727,8 @@ roc <- simple_roc(test$SeriousDlqin2yrs, preds)
 clf_thresh <- roc %>% select_threshold(FPR = .25)
 ```
 
-    ## range within thresh:  0.0424 0.0476 
-    ## median threshold:  0.0448
+     range within thresh:  0.0424 0.0476 
+     median threshold:  0.0448
 
 ``` r
 confusion_matrix(test, preds, clf_thresh = clf_thresh)
@@ -743,7 +743,7 @@ confusion_matrix(test, preds, clf_thresh = clf_thresh)
   - **Naieve Bayes**
   - **Neural Network**
 
-<!-- ## SVM  -->
+<!--  SVM  -->
 
 <!-- ```{r} -->
 
@@ -757,10 +757,10 @@ confusion_matrix(test, preds, clf_thresh = clf_thresh)
 
 <!-- ``` -->
 
-<!-- ## Naieve Bayes -->
+<!--  Naieve Bayes -->
 
 <!-- model here -->
 
-<!-- ## neural net  -->
+<!--  neural net  -->
 
 <!-- neural net here  -->
